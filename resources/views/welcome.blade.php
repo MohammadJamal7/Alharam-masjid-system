@@ -1,4 +1,7 @@
 @php
+    // Get all masjids from database
+    $allMasjids = \App\Models\Masjid::all();
+    
     $masjidCards = [
         [
             'id' => 1,
@@ -16,6 +19,9 @@
             'icon' => '<i class="fas fa-mosque"></i>'
         ],
     ];
+    
+    // Get other masjids (excluding Al-Haram and Nabawi)
+    $otherMasjids = $allMasjids->whereNotIn('id', [1, 2]);
     $features = [
         ['icon' => '<i class="fas fa-bullhorn"></i>', 'text' => 'شاشة موزعة في مواقع محددة في المسجد الحرام والمسجد النبوي'],
         ['icon' => '<i class="fas fa-chart-bar"></i>', 'text' => 'إحصائيات عامة عن المسجدين'],
@@ -268,6 +274,72 @@
             align-items: flex-start;
             gap: 1rem;
         }
+        
+        .dropdown-container {
+            position: relative;
+        }
+        
+        .dropdown-arrow {
+            margin-left: 8px;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .dropdown-container.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-menu {
+                position: absolute;
+                top: 0;
+                left: -250px;
+                width: 240px;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                z-index: 1000;
+                max-height: 300px;
+                overflow-y: auto;
+                display: none;
+            }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            text-align: right;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .dropdown-btn:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .dropdown-btn i {
+            color: var(--deep-forest);
+            font-size: 16px;
+        }
         .masjid-card:has(.filter-section.active) {
             z-index: 20;
         }
@@ -280,19 +352,23 @@
             border-radius: 6px;
             border: 1px solid var(--border-subtle);
             display: none;
+            position: absolute;
+            top: 0;
+            right: 100%;
+            margin-right: 10px;
+            width: 300px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+        .masjid-card {
             position: relative;
-            z-index: 10;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, opacity 0.3s ease;
-            opacity: 0;
-            flex: 1;
-            min-width: 300px;
         }
         .filter-section.active {
             display: block;
-            max-height: 300px;
-            opacity: 1;
+        }
+        .masjid-side {
+            position: relative;
         }
         .filter-header {
             display: flex;
@@ -407,11 +483,27 @@
             <p>يرجى اختيار المسجد الذي ترغب في عرض فعالياته.</p>
             <div class="masjid-btns" id="masjidBtns">
                 @foreach($masjidCards as $i => $masjid)
-                    <div class="masjid-card">
-                        <button class="masjid-btn" data-masjid-id="{{ $masjid['id'] }}" onclick="toggleFilters({{ $masjid['id'] }})" tabindex="0" style="width:100%; display:block; text-align:center;">
+                    <div class="masjid-card {{ $masjid['id'] === 'all' ? 'dropdown-container' : '' }}">
+                        <button class="masjid-btn" data-masjid-id="{{ $masjid['id'] }}" onclick="{{ $masjid['id'] === 'all' ? 'toggleDropdown()' : 'toggleFilters(' . $masjid['id'] . ')' }}" tabindex="0" style="width:100%; display:block; text-align:center;">
                             <span class="icon">{!! $masjid['icon'] !!}</span>
                             <span>{{ $masjid['name'] }}</span>
+                            @if($masjid['id'] === 'all')
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            @endif
                         </button>
+                        
+                        @if($masjid['id'] === 'all')
+                            <div class="dropdown-menu" id="allMasjidsDropdown">
+                                @foreach($otherMasjids as $otherMasjid)
+                                    <div class="dropdown-item">
+                                        <button class="dropdown-btn" onclick="toggleFilters({{ $otherMasjid->id }}, '{{ $otherMasjid->name }}')" data-masjid-id="{{ $otherMasjid->id }}">
+                                            <i class="fas fa-mosque"></i>
+                                            <span>{{ $otherMasjid->name }}</span>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                         
                         <div class="filter-section" id="filters-{{ $masjid['id'] }}">
                             <div class="filter-header">
@@ -490,6 +582,85 @@
                         </div>
                     </div>
                 @endforeach
+                
+                <!-- Filter sections for other masjids from dropdown -->
+                @foreach($otherMasjids as $otherMasjid)
+                    <div class="filter-section" id="filters-{{ $otherMasjid->id }}">
+                        <div class="filter-header">
+                            <div class="filter-title">  اختر المرشحات</div>
+                            <button type="button" class="filter-close" onclick="closeFilters({{ $otherMasjid->id }})" aria-label="إغلاق">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <form id="filterForm-{{ $otherMasjid->id }}">
+                            <div class="filter-row">
+                                <div class="filter-group">
+                                    <label for="programType-{{ $otherMasjid->id }}">نوع البرنامج</label>
+                                    <select name="program_type" id="programType-{{ $otherMasjid->id }}">
+                                        <option value="">الكل</option>
+                                        @if(isset($programTypes))
+                                            @foreach($programTypes as $type)
+                                                <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label for="section-{{ $otherMasjid->id }}">القسم</label>
+                                    <select name="section" id="section-{{ $otherMasjid->id }}">
+                                        <option value="">الكل</option>
+                                        @if(isset($sections))
+                                            @foreach($sections as $section)
+                                                <option value="{{ $section->id }}">{{ $section->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-row">
+                                <div class="filter-group">
+                                    <label for="direction-{{ $otherMasjid->id }}">الواجهة</label>
+                                    <select name="direction" id="direction-{{ $otherMasjid->id }}">
+                                        <option value="">الكل</option>
+                                        @if(isset($locations))
+                                            @foreach($locations->pluck('direction')->unique()->filter() as $direction)
+                                                <option value="{{ $direction }}">{{ $direction }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label for="floors-{{ $otherMasjid->id }}">الدور</label>
+                                    <select name="floors_count" id="floors-{{ $otherMasjid->id }}">
+                                        <option value="">الكل</option>
+                                        @if(isset($locations))
+                                            @foreach($locations->pluck('floors_count')->unique()->sort() as $floors)
+                                                <option value="{{ $floors }}">{{ $floors }} دور</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-row">
+                                <div class="filter-group">
+                                    <label for="location-{{ $otherMasjid->id }}">الموقع</label>
+                                    <select name="location_id" id="location-{{ $otherMasjid->id }}">
+                                        <option value="">الكل</option>
+                                        @if(isset($locations))
+                                            @foreach($locations as $location)
+                                                <option value="{{ $location->id }}">مبنى {{ $location->building_number }} - {{ $location->masjid->name ?? '' }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-actions">
+                                <button type="button" class="filter-btn primary" onclick="applyFilters({{ $otherMasjid->id }})">عرض النتائج</button>
+                                <button type="button" class="filter-btn secondary" onclick="resetFilters({{ $otherMasjid->id }})">إعادة تعيين</button>
+                            </div>
+                        </form>
+                    </div>
+                @endforeach
             </div>
             <button class="cta-btn" id="startBtn" style="display:none;">ابدأ العرض</button>
         </div>
@@ -508,25 +679,70 @@
     <script>
         let activeFilters = null;
         
-        function toggleFilters(masjidId) {
-            // Hide all other filter sections
+        function toggleDropdown() {
+            const dropdown = document.getElementById('allMasjidsDropdown');
+            const container = dropdown.closest('.dropdown-container');
+            
+            // Close all filter sections first
+            document.querySelectorAll('.filter-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Toggle dropdown
+            dropdown.classList.toggle('show');
+            container.classList.toggle('active');
+            
+            // Close dropdown when clicking outside
+            if (dropdown.classList.contains('show')) {
+                document.addEventListener('click', closeDropdownOnOutsideClick);
+            } else {
+                document.removeEventListener('click', closeDropdownOnOutsideClick);
+            }
+        }
+        
+        function closeDropdownOnOutsideClick(event) {
+            const dropdown = document.getElementById('allMasjidsDropdown');
+            const container = dropdown.closest('.dropdown-container');
+            
+            if (!container.contains(event.target)) {
+                dropdown.classList.remove('show');
+                container.classList.remove('active');
+                document.removeEventListener('click', closeDropdownOnOutsideClick);
+            }
+        }
+
+        function toggleFilters(masjidId, masjidName) {
+            // Close dropdown if open
+            const dropdown = document.getElementById('allMasjidsDropdown');
+            const dropdownContainer = dropdown?.closest('.dropdown-container');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+                dropdownContainer.classList.remove('active');
+                document.removeEventListener('click', closeDropdownOnOutsideClick);
+            }
+            
+            // Close all other filter sections first
             document.querySelectorAll('.filter-section').forEach(section => {
                 if (section.id !== `filters-${masjidId}`) {
                     section.classList.remove('active');
                 }
             });
-            
-            // Toggle current filter section
+
             const filterSection = document.getElementById(`filters-${masjidId}`);
-            if (filterSection) {
-                if (filterSection.classList.contains('active')) {
-                    filterSection.classList.remove('active');
-                    activeFilters = null;
-                    document.body.classList.remove('menu-open');
-                } else {
-                    filterSection.classList.add('active');
-                    activeFilters = masjidId;
-                    document.body.classList.add('menu-open');
+            const isActive = filterSection.classList.contains('active');
+
+            if (isActive) {
+                filterSection.classList.remove('active');
+                activeFilters = null;
+                document.body.classList.remove('menu-open');
+            } else {
+                filterSection.classList.add('active');
+                activeFilters = masjidId;
+                document.body.classList.add('menu-open');
+                // Update the filter header title
+                const filterTitle = filterSection.querySelector('.filter-title');
+                if (filterTitle) {
+                    filterTitle.textContent = `اختر المرشحات`;
                 }
             }
         }
@@ -574,7 +790,7 @@
         
         // Close filters when clicking outside
         document.addEventListener('click', function(event) {
-            if (!event.target.closest('.masjid-card') && activeFilters) {
+            if (!event.target.closest('.masjid-card') && !event.target.closest('.filter-section') && activeFilters) {
                 document.getElementById(`filters-${activeFilters}`).classList.remove('active');
                 document.body.classList.remove('menu-open');
                 activeFilters = null;
