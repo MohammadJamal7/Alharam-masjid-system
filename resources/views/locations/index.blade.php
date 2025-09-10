@@ -4,7 +4,6 @@
 <div class="locations-page-container" style="max-width:1200px;margin:0 auto;">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="locations-title" style="font-weight:900;color:#174032;font-size:1.5rem;letter-spacing:0.5px;font-family:'Cairo',sans-serif;">قائمة المواقع</h2>
-        <a href="{{ route('locations.create') }}" class="btn locations-add-btn">إضافة موقع جديد</a>
     </div>
     <div class="locations-table-card" style="background:#faf9f6;border-radius:16px;box-shadow:0 4px 24px rgba(30,41,59,0.07);padding:2.2rem 1.5rem;border-top:5px solid #d4af37;">
         <table class="locations-table" style="width:100%;border-collapse:separate;border-spacing:0 0.5rem;font-size:1.07rem;font-family:'Cairo',sans-serif;">
@@ -12,7 +11,7 @@
                 <tr style="background:linear-gradient(135deg,#174032 0%,#174032 100%);color:#d4af37;font-weight:700;">
                     <th style="padding:1rem 0.5rem;text-align:center;">اسم الموقع</th>
                     <th style="padding:1rem 0.5rem;text-align:center;">تفاصيل إضافية</th>
-                    <th style="padding:1rem 0.5rem;text-align:center;">إجراءات</th>
+                    <th style="padding:1rem 0.5rem;text-align:center;">الإجراءات</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,14 +28,12 @@
                         @endif
                     </td>
                     <td style="padding:0.9rem 0.5rem;text-align:center;">
-                        <div class="locations-actions-btns" style="display:flex;flex-direction:column;gap:0.25rem;align-items:center;justify-content:center;">
-                            <a href="{{ route('locations.edit', $location) }}" class="btn btn-outline-warning locations-btn locations-btn-action">تعديل</a>
-                            <form action="{{ route('locations.destroy', $location) }}" method="POST" style="display:inline-block;" class="delete-entity-form" data-entity-name="{{ $location->name }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" class="btn btn-outline-danger locations-btn locations-btn-action delete-entity-btn">حذف</button>
-                            </form>
-                        </div>
+                        <a href="{{ route('locations.edit', $location->id) }}" class="btn btn-sm btn-warning" title="تعديل"><i class="fas fa-edit"></i></a>
+                        <form action="{{ route('locations.destroy', $location->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" title="حذف" onclick="return confirm('هل أنت متأكد من الحذف؟');"><i class="fas fa-trash-alt"></i></button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach

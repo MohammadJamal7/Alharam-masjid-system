@@ -1,5 +1,9 @@
 @foreach($programs as $program)
-<tr>
+<tr data-program-type="{{ $program->program_type }}" 
+    data-field="{{ $program->field }}" 
+    data-specialty="{{ $program->specialty }}" 
+    data-location-id="{{ $program->location_id }}" 
+    data-location-array="{{ is_array($program->location) ? implode(',', $program->location) : '' }}">
     <td>{{ $program->date }}</td>
     <td>{{ $program->day }}</td>
     <td>{{ $program->imam_fajr }}</td>

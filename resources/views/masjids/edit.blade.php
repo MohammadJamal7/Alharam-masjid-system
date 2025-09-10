@@ -34,6 +34,13 @@
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">المساحة المغطاة (م²)</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-ruler-combined input-inside-icon"></i>
+                        <input type="number" step="0.01" name="covered_area_sqm" class="form-control" value="{{ old('covered_area_sqm', $masjid->covered_area_sqm) }}" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
                     <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">السعة</label>
                     <div class="input-icon-wrapper">
                         <i class="fas fa-users input-inside-icon"></i>
@@ -73,6 +80,72 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- الحقول الجديدة -->
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">معلومات عامة عن المسجد</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-info-circle input-inside-icon"></i>
+                        <textarea name="general_info" class="form-control" rows="3" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;padding-right:2.3rem;">{{ old('general_info', $masjid->general_info) }}</textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">خدمات متاحة في المسجد</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-concierge-bell input-inside-icon"></i>
+                        <textarea name="available_services" class="form-control" rows="3" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;padding-right:2.3rem;">{{ old('available_services', $masjid->available_services) }}</textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">إحصائيات عامة عن المسجد</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-chart-bar input-inside-icon"></i>
+                        <textarea name="general_statistics" class="form-control" rows="3" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;padding-right:2.3rem;">{{ old('general_statistics', $masjid->general_statistics) }}</textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">عدد البرامج</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-list input-inside-icon"></i>
+                        <input type="number" name="programs_count[programs]" class="form-control" value="{{ old('programs_count.programs', $masjid->programs_count['programs'] ?? '') }}" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">عدد الدروس</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-book input-inside-icon"></i>
+                        <input type="number" name="programs_count[lessons]" class="form-control" value="{{ old('programs_count.lessons', $masjid->programs_count['lessons'] ?? '') }}" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">عدد الحلقات</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-circle input-inside-icon"></i>
+                        <input type="number" name="programs_count[circles]" class="form-control" value="{{ old('programs_count.circles', $masjid->programs_count['circles'] ?? '') }}" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">الوقت والتاريخ الحاليين</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-calendar-alt input-inside-icon"></i>
+                        <input type="datetime-local" name="current_datetime" class="form-control" value="{{ old('current_datetime', $masjid->current_datetime ? $masjid->current_datetime->format('Y-m-d\TH:i') : '') }}" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
+                    </div>
+                </div>
+            </div>
+            
             <div class="d-flex justify-content-center gap-3 mt-4">
                 <button type="submit" class="btn btn-primary" style="border-radius:8px;background:#d4af37;color:#174032;font-weight:700;font-family:'Cairo',sans-serif;padding:0.7rem 2.1rem;font-size:1.07rem;min-width:140px;">تحديث المسجد</button>
                 <a href="{{ route('masjids.index') }}" class="btn btn-secondary" style="border-radius:8px;background:#174032;color:#fff;font-family:'Cairo',sans-serif;padding:0.7rem 2.1rem;font-size:1.07rem;min-width:140px;">إلغاء</a>
@@ -114,4 +187,4 @@
         border: 1.5px solid #d4af37 !important;
     }
 </style>
-@endsection 
+@endsection

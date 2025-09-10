@@ -21,7 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'phone'
+        'phone',
+        'role',
+        'note',
     ];
 
     /**
@@ -45,5 +47,60 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'admin_permissions', 'admin_id', 'permission_id')
+            ->withPivot(['masjid_id', 'program_type'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Check if the admin has a permission, optionally scoped to masjid or program type.
+     */
+    public function hasPermission($permission, $masjidId = null, $programType = null)
+    {
+        // Super admin has all permissions
+        if ($this->role === 'super_admin') {
+            return true;
+        }
+
+        return $this->permissions()
+            ->where('name', $permission)
+            ->when($masjidId, function ($query) use ($masjidId) {
+                $query->wherePivot('masjid_id', $masjidId);
+            })
+            ->when($programType, function ($query) use ($programType) {
+                $query->wherePivot('program_type', $programType);
+            })
+            ->exists();
+    }
+
+    /**
+     * Check if the admin has any constants permissions.
+     */
+    public function hasAnyConstantsPermission()
+    {
+        // Super admin has all permissions
+        if ($this->role === 'super_admin') {
+            return true;
+        }
+
+        $constantsPermissions = [
+            'manage_constants',
+            'manage_icons',
+            'manage_hijri_years',
+            'manage_sections',
+            'manage_levels',
+            'manage_majors',
+            'manage_books',
+            'manage_program_types',
+            'manage_teachers'
+        ];
+
+        return $this->permissions()
+            ->whereIn('name', $constantsPermissions)
+            ->exists();
     }
 }

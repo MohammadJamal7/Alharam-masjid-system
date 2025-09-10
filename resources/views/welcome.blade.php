@@ -1,14 +1,17 @@
 @php
-    $masjids = [
+    $masjidCards = [
         [
+            'id' => 1,
             'name' => 'المسجد الحرام',
             'icon' => '<i class="fas fa-kaaba"></i>'
         ],
         [
+            'id' => 2,
             'name' => 'المسجد النبوي',
             'icon' => '<i class="fas fa-mosque"></i>'
         ],
         [
+            'id' => 'all',
             'name' => 'الكل',
             'icon' => '<i class="fas fa-mosque"></i>'
         ],
@@ -25,11 +28,12 @@
     ];
 @endphp
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الهيئة العامة للعناية بشؤون المسجد الحرام والمسجد النبوي</title>
+    <title>{{ $siteName }}</title>
+    <link rel="icon" href="/favicon.png" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -49,9 +53,13 @@
             font-family: var(--font-body);
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden; /* منع التمرير */
+        }
+        body.menu-open {
+            overflow-y: auto;
         }
         .main-header {
             background: var(--deep-forest);
@@ -81,7 +89,7 @@
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: var(--deep-forest);
+            background: white;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -89,6 +97,7 @@
             color: var(--warm-gold);
             font-size: 1.3rem;
             border: 2px solid var(--warm-gold);
+            margin-right: 1.5rem;
         }
         .logo-title {
             font-family: var(--font-heading);
@@ -101,14 +110,14 @@
         .main-container {
             flex: 1;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
-            min-height: 70vh;
-            padding: 4.5rem 2vw 0 2vw;
+            padding: 1rem 2vw;
             max-width: 1400px;
             margin: 0 auto;
             width: 100%;
-            gap: 6vw;
+            gap: 4vw;
+            overflow: hidden;
         }
         .masjid-side, .features-side {
             background: none;
@@ -135,10 +144,10 @@
         }
         .features-title {
             font-family: var(--font-heading);
-            font-size: 1.15rem;
+            font-size: 1rem;
             font-weight: 900;
             color: var(--deep-forest);
-            margin-bottom: 1.2rem;
+            margin-bottom: 0.8rem;
             text-align: right;
         }
         .features-list {
@@ -147,55 +156,57 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 1.1rem;
+            gap: 0.7rem;
         }
         .features-list li {
             display: flex;
             align-items: flex-start;
-            gap: 0.7rem;
-            font-size: 1.05rem;
+            gap: 0.5rem;
+            font-size: 0.9rem;
             color: var(--charcoal-dark);
+            line-height: 1.3;
         }
         .features-list .icon {
             color: var(--warm-gold);
-            font-size: 1.1rem;
-            margin-top: 0.1rem;
+            font-size: 1rem;
+            margin-top: 0.05rem;
+            flex-shrink: 0;
         }
         .masjid-side h2 {
             font-family: var(--font-heading);
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 900;
             color: var(--deep-forest);
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.5rem;
             text-align: center;
         }
         .masjid-side p {
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             color: #444;
-            margin-bottom: 2.2rem;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
         .masjid-btns {
             display: flex;
             flex-direction: column;
-            gap: 1.1rem;
-            margin-bottom: 2.2rem;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
             width: 100%;
-            max-width: 350px;
+            max-width: 280px;
         }
         .masjid-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.8rem;
+            gap: 0.6rem;
             background: var(--pure-white);
             border: 2px solid var(--border-subtle);
-            border-radius: 10px;
+            border-radius: 8px;
             font-family: var(--font-heading);
-            font-size: 1.13rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--deep-forest);
-            padding: 1.1rem 0.5rem;
+            padding: 0.8rem 0.5rem;
             cursor: pointer;
             transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
             outline: none;
@@ -207,7 +218,7 @@
             box-shadow: 0 4px 16px rgba(212, 175, 55, 0.08);
         }
         .masjid-btn .icon {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--warm-gold);
         }
         .cta-btn {
@@ -216,15 +227,15 @@
             border: none;
             border-radius: 50px;
             font-family: var(--font-heading);
-            font-size: 1.13rem;
+            font-size: 1rem;
             font-weight: 900;
-            padding: 1rem 2.5rem;
+            padding: 0.8rem 2rem;
             cursor: pointer;
             transition: background 0.2s, color 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 16px rgba(212, 175, 55, 0.13);
             margin-top: 0.5rem;
             width: 100%;
-            max-width: 220px;
+            max-width: 200px;
         }
         .cta-btn:hover, .cta-btn:focus {
             background: var(--deep-forest);
@@ -232,8 +243,8 @@
             outline: 2px solid var(--warm-gold);
         }
         .footer {
-            margin-top: 2.5rem;
-            padding: 1.2rem 0 0.5rem 0;
+            margin-top: auto; /* تغيير من margin-top محدد إلى auto لدفع التذييل للأسفل */
+            padding: 1rem 0;
             text-align: center;
             font-size: 0.95rem;
             color: #888;
@@ -250,13 +261,144 @@
         .masjid-btns a.masjid-btn {
             text-decoration: none !important;
         }
+        .masjid-card {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .masjid-card:has(.filter-section.active) {
+            z-index: 20;
+        }
+        .masjid-btn {
+            flex-shrink: 0;
+        }
+        .filter-section {
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+            display: none;
+            position: relative;
+            z-index: 10;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            flex: 1;
+            min-width: 300px;
+        }
+        .filter-section.active {
+            display: block;
+            max-height: 300px;
+            opacity: 1;
+        }
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+        .filter-title {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--deep-forest);
+            margin: 0;
+        }
+        .filter-close {
+            background: none;
+            border: none;
+            color: var(--charcoal-dark);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.2rem;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .filter-close:hover {
+            background-color: #e9ecef;
+            color: var(--deep-forest);
+        }
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.6rem;
+        }
+        .filter-group {
+            min-width: 100px;
+        }
+        .filter-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--charcoal-dark);
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+        }
+        .filter-group select {
+            width: 100%;
+            padding: 0.3rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: white;
+            color: var(--charcoal-dark);
+        }
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--warm-gold);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+        }
+        .filter-actions {
+            display: flex;
+            gap: 0.4rem;
+            justify-content: center;
+            margin-top: 0.6rem;
+        }
+        .filter-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn.primary {
+            background: var(--warm-gold);
+            color: var(--deep-forest);
+        }
+        .filter-btn.primary:hover {
+            background: var(--deep-forest);
+            color: var(--warm-gold);
+        }
+        .filter-btn.secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .filter-btn.secondary:hover {
+            background: #5a6268;
+        }
     </style>
 </head>
 <body>
     <header class="main-header">
         <div class="header-content">
-            <div class="logo-icon"><i class="fas fa-mosque"></i></div>
-            <h1 class="logo-title">الهيئة العامة للعناية بشؤون المسجد الحرام والمسجد النبوي</h1>
+            <div class="logo-icon">
+                @if($iconUrl)
+                    <img src="{{ $iconUrl }}" alt="Logo" style="width: 60px; height: 60px; object-fit: contain;">
+                @else
+                    <i class="fas fa-mosque"></i>
+                @endif
+            </div>
+            <h1 class="logo-title">{{ $siteName }}</h1>
         </div>
     </header>
     <div class="main-container">
@@ -264,23 +406,89 @@
             <h2>اختر المسجد</h2>
             <p>يرجى اختيار المسجد الذي ترغب في عرض فعالياته.</p>
             <div class="masjid-btns" id="masjidBtns">
-                @foreach($masjids as $i => $masjid)
-                    @if($masjid['name'] === 'المسجد الحرام')
-                        <a href="{{ route('masjids.home', 1) }}" class="masjid-btn" tabindex="0" style="text-decoration:none !important; width:100%; display:block; text-align:center;">
+                @foreach($masjidCards as $i => $masjid)
+                    <div class="masjid-card">
+                        <button class="masjid-btn" data-masjid-id="{{ $masjid['id'] }}" onclick="toggleFilters({{ $masjid['id'] }})" tabindex="0" style="width:100%; display:block; text-align:center;">
                             <span class="icon">{!! $masjid['icon'] !!}</span>
                             <span>{{ $masjid['name'] }}</span>
-                        </a>
-                    @elseif($masjid['name'] === 'المسجد النبوي')
-                        <a href="{{ route('masjids.home', 2) }}" class="masjid-btn" tabindex="0" style="text-decoration:none !important; width:100%; display:block; text-align:center;">
-                            <span class="icon">{!! $masjid['icon'] !!}</span>
-                            <span>{{ $masjid['name'] }}</span>
-                        </a>
-                    @else
-                        <a href="#" class="masjid-btn" tabindex="0" style="width:100%; display:block; text-decoration:none !important; text-align:center;">
-                            <span class="icon">{!! $masjid['icon'] !!}</span>
-                            <span>{{ $masjid['name'] }}</span>
-                        </a>
-                    @endif
+                        </button>
+                        
+                        <div class="filter-section" id="filters-{{ $masjid['id'] }}">
+                            <div class="filter-header">
+                                <div class="filter-title">اختر المرشحات</div>
+                                <button type="button" class="filter-close" onclick="closeFilters({{ $masjid['id'] }})" aria-label="إغلاق">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <form id="filterForm-{{ $masjid['id'] }}">
+                                <div class="filter-row">
+                                    <div class="filter-group">
+                                        <label for="programType-{{ $masjid['id'] }}">نوع البرنامج</label>
+                                        <select name="program_type" id="programType-{{ $masjid['id'] }}">
+                                            <option value="">الكل</option>
+                                            @if(isset($programTypes))
+                                                @foreach($programTypes as $type)
+                                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="filter-group">
+                                        <label for="section-{{ $masjid['id'] }}">القسم</label>
+                                        <select name="section" id="section-{{ $masjid['id'] }}">
+                                            <option value="">الكل</option>
+                                            @if(isset($sections))
+                                                @foreach($sections as $section)
+                                                    <option value="{{ $section->id }}">{{ $section->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="filter-row">
+                                    <div class="filter-group">
+                                        <label for="direction-{{ $masjid['id'] }}">الواجهة</label>
+                                        <select name="direction" id="direction-{{ $masjid['id'] }}">
+                                            <option value="">الكل</option>
+                                            @if(isset($locations))
+                                                @foreach($locations->pluck('direction')->unique()->filter() as $direction)
+                                                    <option value="{{ $direction }}">{{ $direction }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="filter-group">
+                                        <label for="floors-{{ $masjid['id'] }}">الدور</label>
+                                        <select name="floors_count" id="floors-{{ $masjid['id'] }}">
+                                            <option value="">الكل</option>
+                                            @if(isset($locations))
+                                                @foreach($locations->pluck('floors_count')->unique()->sort() as $floors)
+                                                    <option value="{{ $floors }}">{{ $floors }} دور</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="filter-row">
+                                    <div class="filter-group">
+                                        <label for="location-{{ $masjid['id'] }}">الموقع</label>
+                                        <select name="location_id" id="location-{{ $masjid['id'] }}">
+                                            <option value="">الكل</option>
+                                            @if(isset($locations))
+                                                @foreach($locations as $location)
+                                                    <option value="{{ $location->id }}">مبنى {{ $location->building_number }} - {{ $location->masjid->name ?? '' }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="filter-actions">
+                                    <button type="button" class="filter-btn primary" onclick="applyFilters({{ $masjid['id'] }})">عرض النتائج</button>
+                                    <button type="button" class="filter-btn secondary" onclick="resetFilters({{ $masjid['id'] }})">إعادة تعيين</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 @endforeach
             </div>
             <button class="cta-btn" id="startBtn" style="display:none;">ابدأ العرض</button>
@@ -298,7 +506,80 @@
         <span>حقوق الهيئة العامة للعناية بشؤون المسجد الحرام والمسجد النبوي محفوظة</span>
     </footer>
     <script>
-        // Remove JS selection logic as buttons are now direct links
+        let activeFilters = null;
+        
+        function toggleFilters(masjidId) {
+            // Hide all other filter sections
+            document.querySelectorAll('.filter-section').forEach(section => {
+                if (section.id !== `filters-${masjidId}`) {
+                    section.classList.remove('active');
+                }
+            });
+            
+            // Toggle current filter section
+            const filterSection = document.getElementById(`filters-${masjidId}`);
+            if (filterSection) {
+                if (filterSection.classList.contains('active')) {
+                    filterSection.classList.remove('active');
+                    activeFilters = null;
+                    document.body.classList.remove('menu-open');
+                } else {
+                    filterSection.classList.add('active');
+                    activeFilters = masjidId;
+                    document.body.classList.add('menu-open');
+                }
+            }
+        }
+        
+        function closeFilters(masjidId) {
+            const filterSection = document.getElementById(`filters-${masjidId}`);
+            if (filterSection) {
+                filterSection.classList.remove('active');
+                activeFilters = null;
+                document.body.classList.remove('menu-open');
+            }
+        }
+        
+        function applyFilters(masjidId) {
+            const form = document.getElementById(`filterForm-${masjidId}`);
+            const formData = new FormData(form);
+            const params = new URLSearchParams();
+            
+            // Add filters to URL parameters
+            for (let [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    params.append(key, value);
+                }
+            }
+            
+            // Determine the URL based on masjid selection
+            let baseUrl;
+            if (masjidId === 'all') {
+                // For "الكل", we can use the first masjid or create a combined view
+                baseUrl = '/masjids/1/display';
+                params.append('show_all', 'true');
+            } else {
+                baseUrl = `/masjids/${masjidId}/display`;
+            }
+            
+            // Redirect to display page with filters
+            const url = baseUrl + (params.toString() ? '?' + params.toString() : '');
+            window.location.href = url;
+        }
+        
+        function resetFilters(masjidId) {
+            const form = document.getElementById(`filterForm-${masjidId}`);
+            form.reset();
+        }
+        
+        // Close filters when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.masjid-card') && activeFilters) {
+                document.getElementById(`filters-${activeFilters}`).classList.remove('active');
+                document.body.classList.remove('menu-open');
+                activeFilters = null;
+            }
+        });
     </script>
 </body>
 </html>

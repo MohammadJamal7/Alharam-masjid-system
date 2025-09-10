@@ -37,12 +37,12 @@
                     <tbody>
                         @foreach($programs->where('program_type', 'درس علمي') as $program)
                         <tr>
-                            <td>
-                                <a href="{{ route('masjids.programs.edit', [$masjid, $program]) }}" class="btn btn-outline-warning programs-btn programs-btn-action">تعديل</a>
-                                <form action="{{ route('masjids.programs.destroy', [$masjid, $program]) }}" method="POST" style="display:inline-block;" class="delete-entity-form" data-entity-name="{{ $program->program_type ?? 'البرنامج' }}">
+                            <td style="padding:0.9rem 0.5rem;text-align:center;white-space:nowrap;">
+                                <a href="{{ route('masjids.programs.edit', [$masjid, $program]) }}" class="btn btn-sm btn-warning" title="تعديل" style="margin-left: 0.25rem;"><i class="fas fa-edit"></i></a>
+                                <form action="{{ route('masjids.programs.destroy', [$masjid, $program]) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-outline-danger programs-btn programs-btn-action delete-entity-btn">حذف</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" title="حذف" onclick="return confirm('هل أنت متأكد من الحذف؟');"><i class="fas fa-trash-alt"></i></button>
                                 </form>
                             </td>
                             <td><a href="{{ $program->teacher_link }}" target="_blank">{{ $program->teacher_link }}</a></td>
@@ -104,12 +104,12 @@
                     <tbody>
                         @foreach($programs->where('program_type', 'حلقة تحفيظ') as $program)
                         <tr>
-                            <td>
-                                <a href="{{ route('masjids.programs.edit', [$masjid, $program]) }}" class="btn btn-outline-warning programs-btn programs-btn-action">تعديل</a>
-                                <form action="{{ route('masjids.programs.destroy', [$masjid, $program]) }}" method="POST" style="display:inline-block;" class="delete-entity-form" data-entity-name="{{ $program->program_type ?? 'البرنامج' }}">
+                            <td style="padding:0.9rem 0.5rem;text-align:center;white-space:nowrap;">
+                                <a href="{{ route('masjids.programs.edit', [$masjid, $program]) }}" class="btn btn-sm btn-warning" title="تعديل"><i class="fas fa-edit"></i></a>
+                                <form action="{{ route('masjids.programs.destroy', [$masjid, $program]) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-outline-danger programs-btn programs-btn-action delete-entity-btn">حذف</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" title="حذف" onclick="return confirm('هل أنت متأكد من الحذف؟');"><i class="fas fa-trash-alt"></i></button>
                                 </form>
                             </td>
                             <td><a href="{{ $program->instructor_link }}" target="_blank">{{ $program->instructor_link }}</a></td>
@@ -175,12 +175,12 @@
                     <tbody>
                         @foreach($programs->where('program_type', 'إمامة') as $program)
                         <tr>
-                            <td>
-                                <a href="{{ route('masjids.programs.edit', [$masjid, $program]) }}" class="btn btn-outline-warning programs-btn programs-btn-action">تعديل</a>
-                                <form action="{{ route('masjids.programs.destroy', [$masjid, $program]) }}" method="POST" style="display:inline-block;" class="delete-entity-form" data-entity-name="{{ $program->program_type ?? 'البرنامج' }}">
+                            <td style="padding:0.9rem 0.5rem;text-align:center;white-space:nowrap;">
+                                <a href="{{ route('masjids.programs.edit', [$masjid, $program]) }}" class="btn btn-sm btn-warning" title="تعديل"><i class="fas fa-edit"></i></a>
+                                <form action="{{ route('masjids.programs.destroy', [$masjid, $program]) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-outline-danger programs-btn programs-btn-action delete-entity-btn">حذف</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" title="حذف" onclick="return confirm('هل أنت متأكد من الحذف؟');"><i class="fas fa-trash-alt"></i></button>
                                 </form>
                             </td>
                             <td>{{ $program->date }}</td>

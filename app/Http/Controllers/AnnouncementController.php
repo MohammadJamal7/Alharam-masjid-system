@@ -46,6 +46,39 @@ class AnnouncementController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+     * Show the form for creating a new urgent announcement.
+     */
+    public function createUrgent()
+    {
+        $masjids = \App\Models\Masjid::all();
+        return view('announcements.create-urgent', compact('masjids'));
+    }
+
+    /**
+     * Store a newly created urgent announcement in storage.
+     */
+    public function storeUrgent(Request $request)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string',
+            'display_start_at' => 'nullable|date',
+            'display_end_at' => 'nullable|date|after:display_start_at',
+            'masjid_id' => 'required|exists:masjids,id',
+        ]);
+        
+        // Force is_urgent to true for urgent announcements
+        $validated['is_urgent'] = true;
+
+        Announcement::create($validated);
+
+        return redirect()->route('announcements.index')
+            ->with('success', 'تم إضافة الإعلان العاجل بنجاح');
+    }
+
+    /**
+     * Display the specified resource.
+     */
     public function show(Announcement $announcement)
     {
         return view('announcements.show', compact('announcement'));
@@ -81,7 +114,7 @@ class AnnouncementController extends Controller
      */
     public function destroy(Announcement $announcement)
     {
-       $ann = Announcement::find($announcement->id);
-    
+        $announcement->delete();
+        return redirect()->route('announcements.index')->with('success', 'تم حذف الإعلان بنجاح');
     }
 }

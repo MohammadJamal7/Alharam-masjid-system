@@ -1,10 +1,21 @@
 @extends('layouts.admin')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['title' => 'الثوابت'],
+    ['title' => 'المساجد']
+]" />
+<div style="height:2.5rem;"></div>
 <div class="masjids-page-container" style="max-width:1200px;margin:0 auto;">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="masjids-title" style="font-weight:900;color:#174032;font-size:1.5rem;letter-spacing:0.5px;font-family:'Cairo',sans-serif;">قائمة المساجد</h2>
-        <a href="{{ route('masjids.create') }}" class="btn masjids-add-btn">إضافة مسجد جديد</a>
+        <div class="d-flex align-items-center gap-3">
+           
+           
+            <a href="{{ route('masjids.create') }}" class="btn masjids-add-btn" style="font-size:0.9rem;padding:0.5rem 1rem;">
+                <i class="fas fa-plus me-2"></i>إضافة مسجد جديد
+            </a>
+        </div>
     </div>
     <div class="masjids-table-card" style="background:#faf9f6;border-radius:16px;box-shadow:0 4px 24px rgba(30,41,59,0.07);padding:2.2rem 1.5rem;border-top:5px solid #d4af37;">
         <table class="masjids-table" style="width:100%;border-collapse:separate;border-spacing:0 0.5rem;font-size:1.07rem;font-family:'Cairo',sans-serif;">
@@ -33,19 +44,18 @@
                     <td style="padding:0.9rem 0.5rem;text-align:center;">{{ $masjid->tawaf_per_hour }}</td>
                     <td style="padding:0.9rem 0.5rem;text-align:center;">
                         <div class="masjids-programs-btns" style="display:flex;flex-direction:column;gap:0.25rem;align-items:center;justify-content:center;">
-                            <a href="{{ route('masjids.programs.index', $masjid) }}" class="btn btn-outline-info masjids-btn masjids-btn-program">عرض البرامج</a>
-                            <a href="{{ route('masjids.home', $masjid) }}" class="btn btn-outline-primary masjids-btn masjids-btn-program"> الرئيسية</a>
+                            <!-- Buttons removed as requested -->
                         </div>
                     </td>
                     <td style="padding:0.9rem 0.5rem;text-align:center;">
-                        <a href="{{ route('masjids.edit', $masjid) }}" class="btn btn-outline-warning btn-sm masjids-btn">تعديل</a>
-                        @if($loopIndex > 1)
-                        <form action="{{ route('masjids.destroy', $masjid) }}" method="POST" style="display:inline-block;" class="delete-entity-form" data-entity-name="{{ $masjid->name }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-outline-danger btn-sm masjids-btn delete-entity-btn">حذف</button>
-                        </form>
-                        @endif
+                        <div class="d-flex justify-content-center" style="min-width:90px;white-space:nowrap;">
+                            <a href="{{ route('masjids.edit', $masjid->id) }}" class="btn btn-sm btn-warning mx-1" title="تعديل"><i class="fas fa-edit"></i></a>
+                            <form action="{{ route('masjids.destroy', $masjid->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger mx-1" title="حذف" onclick="return confirm('هل أنت متأكد من الحذف؟');"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @endforeach
@@ -108,4 +118,4 @@
 
 @section('scripts')
 @include('partials.delete-modal', ['entityType' => 'المسجد'])
-@endsection 
+@endsection

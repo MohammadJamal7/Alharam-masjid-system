@@ -20,63 +20,86 @@
         <form method="POST" action="{{ route('admin.admins.update', $admin->id) }}" class="admin-form">
             @csrf
             @method('PUT')
-            <div class="form-grid">
+            <div class="form-grid-row">
                 <div class="form-group">
-                    <label for="name" class="form-label">
-                        <i class="fas fa-user"></i>
-                        الاسم الكامل
-                    </label>
+                    <label for="name" class="form-label">الاسم الكامل</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-user input-inside-icon"></i>
                     <input type="text" id="name" name="name" class="form-input" 
                            value="{{ old('name', $admin->name) }}" required 
                            placeholder="أدخل الاسم الكامل" autocomplete="off">
+                    </div>
                     @error('name')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
-
                 <div class="form-group">
-                    <label for="email" class="form-label">
-                        <i class="fas fa-envelope"></i>
-                        البريد الإلكتروني
-                    </label>
+                    <label for="email" class="form-label">البريد الإلكتروني</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-envelope input-inside-icon"></i>
                     <input type="email" id="email" name="email" class="form-input" 
                            value="{{ old('email', $admin->email) }}" required 
                            placeholder="أدخل البريد الإلكتروني" autocomplete="off">
+                    </div>
                     @error('email')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
-
+            </div>
+            <div class="form-grid-row form-grid-row-3">
                 <div class="form-group">
-                    <label for="password" class="form-label">
-                        <i class="fas fa-lock"></i>
-                        كلمة المرور الجديدة (اختياري)
-                    </label>
+                    <label for="role" class="form-label">الدور</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-user-shield input-inside-icon"></i>
+                        <select id="role" name="role" class="form-input" required>
+                            <option value="admin" {{ old('role', $admin->role) == 'admin' ? 'selected' : '' }}>مشرف</option>
+                            <option value="super_admin" {{ old('role', $admin->role) == 'super_admin' ? 'selected' : '' }}>مشرف عام</option>
+                        </select>
+                    </div>
+                    @error('role')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="phone" class="form-label">رقم الهاتف</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-phone input-inside-icon"></i>
+                        <input type="tel" id="phone" name="phone" class="form-input" 
+                               value="{{ old('phone', $admin->phone) }}" 
+                               placeholder="أدخل رقم الهاتف (مثال: 0551234567)" autocomplete="off">
+                    </div>
+                    @error('phone')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">كلمة المرور الجديدة (اختياري)</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-lock input-inside-icon"></i>
                     <input type="password" id="password" name="password" class="form-input" 
-                           placeholder="أدخل كلمة المرور الجديدة (اتركها فارغة للإبقاء على الحالية)" autocomplete="off">
+                           placeholder="أدخل كلمة المرور الجديدة (اتركها فارغة للإبقاء على الحالية)" autocomplete="new-password">
+                    </div>
                     @error('password')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
-
+            </div>
+            <div class="form-grid-row">
                 <div class="form-group">
-                    <label for="password_confirmation" class="form-label">
-                        <i class="fas fa-lock"></i>
-                        تأكيد كلمة المرور الجديدة
-                    </label>
+                    <label for="password_confirmation" class="form-label">تأكيد كلمة المرور الجديدة</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-lock input-inside-icon"></i>
                     <input type="password" id="password_confirmation" name="password_confirmation" 
-                           class="form-input" placeholder="أعد إدخال كلمة المرور الجديدة" autocomplete="off">
+                           class="form-input" placeholder="أعد إدخال كلمة المرور الجديدة" autocomplete="new-password">
+                    </div>
                 </div>
-
                 <div class="form-group">
-                    <label for="phone" class="form-label">
-                        <i class="fas fa-phone"></i>
-                        رقم الهاتف
-                    </label>
-                    <input type="tel" id="phone" name="phone" class="form-input" 
-                           value="{{ old('phone', $admin->phone) }}" 
-                           placeholder="أدخل رقم الهاتف" autocomplete="off">
-                    @error('phone')
+                    <label for="note" class="form-label">ملاحظة</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-sticky-note input-inside-icon"></i>
+                        <textarea id="note" name="note" class="form-input" rows="2" placeholder="أدخل ملاحظة عن المشرف (اختياري)">{{ old('note', $admin->note) }}</textarea>
+                    </div>
+                    @error('note')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
@@ -162,7 +185,20 @@
     color: #d4af37;
     font-size: 1.1rem;
 }
-.form-input {
+.input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.input-inside-icon {
+    position: absolute;
+    right: 1rem;
+    color: #d4af37;
+    font-size: 1.1rem;
+    pointer-events: none;
+    z-index: 2;
+}
+.form-input, select.form-input, textarea.form-input {
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 3rem;
     border: 2px solid #e8e8e8;
@@ -172,7 +208,8 @@
     background: #fff;
     color: #2c3e50;
     transition: all 0.3s ease;
-    height: 45px;
+    box-sizing: border-box;
+    padding-right: 2.5rem;
 }
 .form-input:focus {
     outline: none;
@@ -228,12 +265,21 @@
     color: #174032;
     border-color: #d4af37;
 }
-@media (max-width: 768px) {
-    .form-grid {
+.form-grid-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+.form-grid-row-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+@media (max-width: 900px) {
+    .form-grid-row {
         grid-template-columns: 1fr;
     }
-    .form-card {
-        padding: 0.5rem 0.2rem;
+    .form-grid-row-3 {
+        grid-template-columns: 1fr;
     }
 }
 </style>

@@ -30,6 +30,18 @@
                         </select>
                     </div>
                 </div>
+                <div class="col-md-6 mb-3" id="day-field">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">اليوم</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-calendar-day input-inside-icon"></i>
+                        <select name="day" class="form-select" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
+                            <option value="">اختر اليوم</option>
+                            @foreach(['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'] as $day)
+                                <option value="{{ $day }}" {{ old('day', $program->day) == $day ? 'selected' : '' }}>{{ $day }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </div>
             <div id="common-fields">
                 <div class="row">
@@ -120,6 +132,8 @@
                     </div>
                 </div>
             </div>
+            <!-- Day selector visible for all types -->
+           
         <div id="type-fields">
             <!-- درس علمي -->
                 <div class="type-specific" data-type="درس علمي" style="display: none;">
@@ -172,15 +186,7 @@
                             <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">التاريخ</label>
                             <input type="date" name="date" class="form-control" value="{{ old('date', $program->date) }}" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">اليوم</label>
-                            <select name="day" class="form-select" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
-                                <option value="">اختر اليوم</option>
-                                @foreach(['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'] as $day)
-                                    <option value="{{ $day }}" {{ old('day', $program->day) == $day ? 'selected' : '' }}>{{ $day }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <div class="col-md-6 mb-3"></div>
                     </div>
                     <div class="row">
                         <div class="col-md-4 mb-3">

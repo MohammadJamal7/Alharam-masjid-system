@@ -62,53 +62,7 @@
         </div>
     </div>
 
-    <!-- Quick Actions Section -->
-    <div class="quick-actions-section">
-        <h2 class="section-title">إجراءات سريعة</h2>
-        <div class="actions-grid">
-            <a href="{{ route('masjids.index') }}" class="action-card">
-                <div class="action-icon">
-                    <i class="fas fa-mosque"></i>
-                </div>
-                <div class="action-content">
-                    <h3>إدارة المساجد</h3>
-                    <p>إضافة وتعديل وحذف المساجد</p>
-                </div>
-            </a>
-
-            <a href="{{ route('announcements.index') }}" class="action-card">
-                <div class="action-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div class="action-content">
-                    <h3>إدارة الإعلانات</h3>
-                    <p>إضافة وتعديل وحذف الإعلانات</p>
-                </div>
-            </a>
-
-            <a href="{{ route('locations.index') }}" class="action-card">
-                <div class="action-icon">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="action-content">
-                    <h3>إدارة المواقع</h3>
-                    <p>إدارة مواقع المساجد</p>
-                </div>
-            </a>
-
-           
-
-            <a href="{{ route('admin.admins.index') }}" class="action-card">
-                <div class="action-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="action-content">
-                    <h3>إدارة المشرفين</h3>
-                    <p>إضافة وتعديل وحذف المشرفين</p>
-                </div>
-            </a>
-        </div>
-    </div>
+   
 </div>
 
 <style>
@@ -116,19 +70,24 @@
 .admin-dashboard-container {
     font-family: 'Cairo', sans-serif;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    min-height: 100vh;
-    padding: 2rem;
+    height: calc(100vh - 5rem);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 /* Header Styles */
 .dashboard-header {
     background: linear-gradient(135deg, #174032 0%, #14532d 100%);
-    border-radius: 20px;
-    padding: 3rem 2rem;
-    margin-bottom: 3rem;
+    border-radius: 15px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(23, 64, 50, 0.2);
+    box-shadow: 0 8px 20px rgba(23, 64, 50, 0.2);
+    flex-shrink: 0;
+    width: 100%;
 }
 
 .header-content {
@@ -139,15 +98,15 @@
 
 .dashboard-title {
     color: #d4af37;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 900;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .dashboard-subtitle {
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
     opacity: 0.9;
 }
@@ -165,7 +124,6 @@
     position: absolute;
     border-radius: 50%;
     background: rgba(212, 175, 55, 0.1);
-    animation: float 6s ease-in-out infinite;
 }
 
 .decoration-circle:nth-child(1) {
@@ -173,47 +131,50 @@
     height: 80px;
     top: 20%;
     right: 10%;
-    animation-delay: 0s;
 }
 
 .decoration-circle:nth-child(2) {
     width: 60px;
     height: 60px;
     top: 60%;
-    right: 80%;
-    animation-delay: 2s;
+    right: 30%;
 }
 
 .decoration-circle:nth-child(3) {
     width: 40px;
     height: 40px;
     top: 80%;
-    right: 60%;
-    animation-delay: 4s;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    right: 50%;
 }
 
 /* Statistics Grid */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.8rem;
+    margin: auto;
+    flex: 1;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    place-items: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 1rem; /* Add padding to prevent cards from sticking to borders */
 }
 
 .stat-card {
     background: #fff;
-    border-radius: 16px;
-    padding: 1.5rem;
+    border-radius: 12px;
+    padding: 1rem;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.7s ease;
     border: 1px solid rgba(212, 175, 55, 0.1);
+    width: 100%;
+    align-self: center;
+    justify-self: center;
 }
 
 .stat-card:hover {
@@ -265,7 +226,7 @@
 }
 
 .stat-label {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 600;
     color: #6c757d;
 }
@@ -278,7 +239,7 @@
     height: 200%;
     background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.03) 50%, transparent 70%);
     transform: rotate(45deg);
-    transition: all 0.3s ease;
+    transition: all 0.7s ease;
 }
 
 .stat-card:hover .card-decoration {
@@ -288,18 +249,25 @@
 /* Quick Actions Section */
 .quick-actions-section {
     background: #fff;
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    justify-content: center;
 }
 
 .section-title {
     color: #174032;
-    font-size: 1.8rem;
+    font-size: 1.3rem;
     font-weight: 800;
-    margin-bottom: 2rem;
+    margin-bottom: 0.8rem;
     text-align: center;
     position: relative;
+    flex-shrink: 0;
 }
 
 .section-title::after {
@@ -315,22 +283,31 @@
 }
 
 .actions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.3rem;
+    justify-content: center;
+    align-items: center;
 }
 
 .action-card {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 15px;
-    padding: 1.5rem;
+    border-radius: 12px;
+    padding: 1rem;
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
+    transition: all 0.7s ease;
     border: 1px solid rgba(212, 175, 55, 0.1);
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: flex-start;
+    gap: 0.8rem;
+    height: 70px;
+    width: 100%;
+    max-width: 300px;
 }
 
 .action-card:hover {
@@ -356,14 +333,14 @@
 
 .action-content h3 {
     color: #174032;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 0.3rem;
 }
 
 .action-content p {
     color: #6c757d;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin: 0;
     opacity: 0.8;
 }
@@ -446,4 +423,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection 
+@endsection

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الصفحة الرئيسية لمسجد: {{ $masjid->name }}</title>
+    <link rel="icon" href="/favicon.png" type="image/svg+xml">
     <!-- Google Fonts: Cairo & Amiri -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
@@ -603,6 +604,68 @@
                 </div>
             </div>
 
+            <!-- Program Filters -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-filter"></i>
+                    <span>فلترة البرامج</span>
+                </div>
+                <div class="card-body">
+                    <form id="program-filters">
+                        <div class="filter-grid">
+                            <div class="input-group">
+                                <select name="program_type" id="program_type_filter" style="width: 100%; padding: 1.1rem 2.5rem 1.1rem 1.1rem; font-size: 1.05rem; border-radius: var(--border-radius); border: 2px solid var(--border-subtle); background: var(--pure-white); color: var(--charcoal-dark); height: 60px; box-sizing: border-box;">
+                                    <option value="">كل أنواع البرامج</option>
+                                    @php
+                                        $programTypes = $programs->pluck('program_type')->unique()->filter()->sort();
+                                    @endphp
+                                    @foreach($programTypes as $type)
+                                        <option value="{{ $type }}">{{ $type }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="input-group">
+                                <select name="field" id="section_filter" style="width: 100%; padding: 1.1rem 2.5rem 1.1rem 1.1rem; font-size: 1.05rem; border-radius: var(--border-radius); border: 2px solid var(--border-subtle); background: var(--pure-white); color: var(--charcoal-dark); height: 60px; box-sizing: border-box;">
+                                    <option value="">كل المجالات</option>
+                                    @php
+                                        $fields = $programs->pluck('field')->unique()->filter()->sort();
+                                    @endphp
+                                    @foreach($fields as $field)
+                                        <option value="{{ $field }}">{{ $field }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <div class="input-group">
+                                <select name="specialty" id="major_filter" style="width: 100%; padding: 1.1rem 2.5rem 1.1rem 1.1rem; font-size: 1.05rem; border-radius: var(--border-radius); border: 2px solid var(--border-subtle); background: var(--pure-white); color: var(--charcoal-dark); height: 60px; box-sizing: border-box;">
+                                    <option value="">كل التخصصات</option>
+                                    @php
+                                        $specialties = $programs->pluck('specialty')->unique()->filter()->sort();
+                                    @endphp
+                                    @foreach($specialties as $specialty)
+                                        <option value="{{ $specialty }}">{{ $specialty }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="input-group">
+                                <select name="location_id" id="location_filter" style="width: 100%; padding: 1.1rem 2.5rem 1.1rem 1.1rem; font-size: 1.05rem; border-radius: var(--border-radius); border: 2px solid var(--border-subtle); background: var(--pure-white); color: var(--charcoal-dark); height: 60px; box-sizing: border-box;">
+                                    <option value="">كل المواقع</option>
+                                    @php
+                                        $locations = \App\Models\Location::orderBy('name')->get();
+                                    @endphp
+                                    @foreach($locations as $location)
+                                        <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                    @endforeach
+                                </select>
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Announcements -->
             <div class="card">
                 <div class="card-header">
@@ -987,6 +1050,64 @@
                 alwaysShowTracks: true
             });
         }
+
+        // Program Filters Functionality
+        function filterPrograms() {
+            const programType = document.getElementById('program_type_filter').value;
+            const field = document.getElementById('section_filter').value;
+            const specialty = document.getElementById('major_filter').value;
+            const locationId = document.getElementById('location_filter').value;
+
+            // Filter Scientific Programs
+            filterProgramTable('tbody-all-scientific', programType, field, specialty, locationId);
+            // Filter Halaqat Programs
+            filterProgramTable('tbody-all-halaqat', programType, field, specialty, locationId);
+            // Filter Imama Programs
+            filterProgramTable('tbody-all-imama', programType, field, specialty, locationId);
+        }
+
+        function filterProgramTable(tbodyId, programType, field, specialty, locationId) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+            
+            let anyVisible = false;
+            Array.from(tbody.querySelectorAll('tr')).forEach(row => {
+                // Skip the 'no results' row
+                if (row.classList.contains('text-center')) return;
+                
+                let show = true;
+                
+                // Get row data attributes
+                const rowProgramType = row.getAttribute('data-program-type');
+                const rowField = row.getAttribute('data-field');
+                const rowSpecialty = row.getAttribute('data-specialty');
+                const rowLocationId = row.getAttribute('data-location-id');
+                const rowLocationArray = row.getAttribute('data-location-array');
+                
+                // Apply filters (matching Program model fields)
+                if (programType && rowProgramType !== programType) show = false;
+                if (field && rowField !== field) show = false;
+                if (specialty && rowSpecialty !== specialty) show = false;
+                if (locationId && rowLocationId !== locationId) show = false;
+                
+                row.style.display = show ? '' : 'none';
+                if (show) anyVisible = true;
+            });
+            
+            // Show/hide the 'no results' row
+            let noResultsRow = tbody.querySelector('tr.text-center');
+            if (noResultsRow) {
+                noResultsRow.style.display = anyVisible ? 'none' : '';
+            }
+        }
+
+        // Attach event listeners to program filters
+        const programFiltersForm = document.getElementById('program-filters');
+        if (programFiltersForm) {
+            programFiltersForm.querySelectorAll('select').forEach(select => {
+                select.addEventListener('change', filterPrograms);
+            });
+        }
         const filterTabs = document.querySelectorAll('.filter-tab');
         const tableSections = document.querySelectorAll('.table-section');
         const filterForms = document.querySelectorAll('.filter-form');
@@ -1215,4 +1336,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </body>
-</html> 
+</html>

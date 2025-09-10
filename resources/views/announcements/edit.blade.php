@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['title' => 'الإعلانات', 'url' => route('announcements.index')],
+    ['title' => 'تعديل إعلان']
+]" />
+<div style="height:2.5rem;"></div>
 <div class="announcements-page-container" style="max-width:1200px;margin:0 auto;">
     <div class="announcements-table-card" style="background:#faf9f6;border-radius:16px;box-shadow:0 4px 24px rgba(30,41,59,0.07);padding:2.2rem 1.5rem;border-top:5px solid #d4af37;">
         <h2 class="announcements-title" style="font-weight:900;color:#174032;font-size:1.5rem;letter-spacing:0.5px;font-family:'Cairo',sans-serif;text-align:center;margin-bottom:2rem;">تعديل إعلان</h2>
@@ -46,9 +51,9 @@
         <div class="mb-3">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="is_urgent" id="is_urgent" value="1" {{ old('is_urgent', $announcement->is_urgent) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="is_urgent" style="color:#174032;font-family:'Cairo',sans-serif;">إعلان عاجل</label>
-                </div>
+                <label class="form-check-label" for="is_urgent" style="color:#174032;font-family:'Cairo',sans-serif;">إعلان عاجل</label>
             </div>
+        </div>
             <div class="d-flex justify-content-center gap-3 mt-4">
                 <button type="submit" class="btn btn-primary" id="submitBtn" style="border-radius:8px;background:#d4af37;color:#174032;font-weight:700;font-family:'Cairo',sans-serif;padding:0.7rem 2.1rem;font-size:1.07rem;min-width:140px;">
                     <i class="fas fa-check-circle me-2"></i> تحديث الإعلان

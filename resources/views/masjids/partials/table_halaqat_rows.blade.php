@@ -1,5 +1,9 @@
 @foreach($programs as $program)
-<tr>
+<tr data-program-type="{{ $program->program_type }}" 
+    data-field="{{ $program->field }}" 
+    data-specialty="{{ $program->specialty }}" 
+    data-location-id="{{ $program->location_id }}" 
+    data-location-array="{{ is_array($program->location) ? implode(',', $program->location) : '' }}">
     <td><a href="{{ $program->instructor_link }}" target="_blank">{{ $program->instructor_link }}</a></td>
     <td>{{ $program->instructor }}</td>
     <td>
@@ -22,4 +26,4 @@
 @endforeach
 @if($programs->isEmpty())
 <tr><td colspan="11" class="text-center">لا توجد نتائج.</td></tr>
-@endif 
+@endif

@@ -3,7 +3,7 @@
 @section('content')
 <div class="programs-page-container" style="max-width:1200px;margin:0 auto;">
     <div class="programs-table-card" style="background:#faf9f6;border-radius:16px;box-shadow:0 4px 24px rgba(30,41,59,0.07);padding:2.2rem 1.5rem;border-top:5px solid #d4af37;">
-        <h2 class="programs-title" style="font-weight:900;color:#174032;font-size:1.5rem;letter-spacing:0.5px;font-family:'Cairo',sans-serif;text-align:center;margin-bottom:2rem;">إضافة برنامج جديد لمسجد: {{ $masjid->name }}</h2>
+        <h2 class="programs-title" style="font-weight:900;color:#174032;font-size:1.5rem;letter-spacing:0.5px;font-family:'Cairo',sans-serif;text-align:center;margin-bottom:2rem;">إضافة برنامج جديد</h2>
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
@@ -13,65 +13,74 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('masjids.programs.store', $masjid) }}" id="programForm">
+        <form method="POST" action="{{ route('masjids.programs.store', 0) }}" id="programForm">
             @csrf
-            <!-- Program Type Section -->
-            <div class="row">
-                <div class="col-md-6 mb-3">
+            <!-- Top row: 3 inputs across full width -->
+            <div class="grid-12">
+                <div class="col-span-4 mb-3">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">المسجد <span style="color:#e74c3c">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-mosque input-inside-icon"></i>
+                        <select name="masjid_id" id="masjid_id" class="form-select" required style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
+                            <option value="">اختر المسجد</option>
+                            @foreach($masjids as $masjid)
+                                <option value="{{ $masjid->id }}" {{ (isset($masjidModel) && $masjidModel && $masjidModel->id == $masjid->id) ? 'selected' : '' }}>{{ $masjid->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-span-4 mb-3">
                     <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">نوع البرنامج <span style="color:#e74c3c">*</span></label>
                     <div class="input-icon-wrapper">
                         <i class="fas fa-layer-group input-inside-icon"></i>
                         <select name="program_type" id="program_type" class="form-select" required style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
-                                <option value="">اختر النوع</option>
-                                @foreach($programTypes as $type)
+                            <option value="">اختر النوع</option>
+                            @foreach($programTypes as $type)
                                 <option value="{{ $type }}" {{ old('program_type') == $type ? 'selected' : '' }}>{{ $type }}</option>
-                                @endforeach
-                            </select>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-span-4 mb-3" id="row1-name-wrapper">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">اسم البرنامج <span style="color:#e74c3c">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-book input-inside-icon"></i>
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" placeholder="أدخل اسم البرنامج" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
                     </div>
                 </div>
             </div>
             <div id="common-fields">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">اسم البرنامج <span style="color:#e74c3c">*</span></label>
-                        <div class="input-icon-wrapper">
-                            <i class="fas fa-book input-inside-icon"></i>
-                            <input type="text" name="name" class="form-control" value="{{ old('name') }}" placeholder="أدخل اسم البرنامج" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
+                <!-- Row 2: 5 inputs (2+2+3+2+3) -->
+                <div class="grid-12">
+                    <div class="col-span-2 mb-3">
                         <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">الحالة <span style="color:#e74c3c">*</span></label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-toggle-on input-inside-icon"></i>
                             <input type="text" name="status" class="form-control" value="{{ old('status') }}" placeholder="أدخل حالة البرنامج" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-span-2 mb-3">
                         <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">المستوى <span style="color:#e74c3c">*</span></label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-signal input-inside-icon"></i>
                             <input type="text" name="level" class="form-control" value="{{ old('level') }}" placeholder="أدخل مستوى البرنامج" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-span-3 mb-3">
                         <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">نوع الحضور</label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-users input-inside-icon"></i>
                             <input type="text" name="attendance_type" class="form-control" value="{{ old('attendance_type') }}" placeholder="أدخل نوع الحضور" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-span-2 mb-3">
                         <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">الوقت من</label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-clock input-inside-icon"></i>
                             <input type="time" name="start_time" class="form-control" value="{{ old('start_time') }}" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-span-3 mb-3">
                         <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">الوقت إلى</label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-clock input-inside-icon"></i>
@@ -79,8 +88,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" id="location-field">
-                    <div class="col-md-6 mb-3">
+
+                <!-- Row 3: 4 inputs (4+4+4) with notes taking 4 -->
+                <div class="grid-12" id="location-field">
+                    <div class="col-span-4 mb-3">
                         <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">الموقع</label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-map-marker-alt input-inside-icon"></i>
@@ -92,7 +103,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-span-4 mb-3">
                         <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">تفاصيل الموقع</label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-map input-inside-icon"></i>
@@ -111,11 +122,24 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 mb-3">
+                    <div class="col-span-4 mb-3">
                         <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">ملاحظات</label>
-                        <textarea name="notes" class="form-control" rows="3" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">{{ old('notes') }}</textarea>
+                        <textarea name="notes" class="form-control" rows="3" style="height:100%;border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">{{ old('notes') }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- Day selector visible for all types -->
+            <div class="grid-12">
+                <div class="col-span-4 mb-3" id="day-field">
+                    <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">اليوم</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-calendar-day input-inside-icon"></i>
+                        <select name="day" class="form-select" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
+                            <option value="">اختر اليوم</option>
+                            @foreach(['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'] as $day)
+                                <option value="{{ $day }}" {{ old('day') == $day ? 'selected' : '' }}>{{ $day }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -171,15 +195,7 @@
                             <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">التاريخ</label>
                             <input type="date" name="date" class="form-control" value="{{ old('date') }}" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" style="color:#174032;font-weight:700;font-family:'Cairo',sans-serif;">اليوم</label>
-                            <select name="day" class="form-select" style="border-radius:8px;border:1.5px solid #d4af37;font-family:'Cairo',sans-serif;">
-                                    <option value="">اختر اليوم</option>
-                                @foreach(['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'] as $day)
-                                    <option value="{{ $day }}" {{ old('day') == $day ? 'selected' : '' }}>{{ $day }}</option>
-                                @endforeach
-                                </select>
-                        </div>
+                        <div class="col-md-6 mb-3"></div>
                     </div>
                     <div class="row">
                         <div class="col-md-4 mb-3">
@@ -267,6 +283,27 @@
         box-shadow: 0 0 0 2px #d4af37;
         outline: none;
     }
+    /* 12-col grid utilities */
+    .grid-12 {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+    }
+    .col-span-2 { grid-column: span 2; }
+    .col-span-3 { grid-column: span 3; }
+    .col-span-4 { grid-column: span 4; }
+    .col-span-6 { grid-column: span 6; }
+    .col-span-12 { grid-column: span 12; }
+    @media (max-width: 991.98px) {
+        .grid-12 { grid-template-columns: repeat(6, 1fr); }
+        .col-span-4 { grid-column: span 6; }
+        .col-span-3 { grid-column: span 6; }
+        .col-span-2 { grid-column: span 3; }
+    }
+    @media (max-width: 575.98px) {
+        .grid-12 { grid-template-columns: 1fr; }
+        .col-span-2, .col-span-3, .col-span-4, .col-span-6, .col-span-12 { grid-column: 1 / -1; }
+    }
     .input-icon-wrapper {
         position: relative;
     }
@@ -302,6 +339,9 @@
             const locationField = document.getElementById('location-field');
             const locationId = document.getElementById('location_id');
             const locationDetail = document.getElementById('location_detail');
+            const masjidSelect = document.getElementById('masjid_id');
+            const row1NameWrapper = document.getElementById('row1-name-wrapper');
+
         // Show/hide type-specific fields
         function updateTypeFields() {
             typeFields.forEach(function(div) {
@@ -313,13 +353,16 @@
             if (typeSelect.value === 'إمامة') {
                 commonFields.style.display = 'none';
                 locationField.style.display = 'none';
+                if (row1NameWrapper) row1NameWrapper.style.display = 'none';
             } else {
                 commonFields.style.display = '';
                 locationField.style.display = '';
+                if (row1NameWrapper) row1NameWrapper.style.display = '';
             }
         }
         typeSelect.addEventListener('change', updateTypeFields);
         updateTypeFields();
+
         // Update location details dropdown on location change
             locationId.addEventListener('change', function() {
                 const selected = locationId.options[locationId.selectedIndex];

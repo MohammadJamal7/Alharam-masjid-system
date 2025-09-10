@@ -1,12 +1,17 @@
 @foreach($programs as $program)
-    <tr class="hover:bg-soft-cream transition-colors duration-200 border-b border-border-subtle">
+    <tr class="hover:bg-soft-cream transition-colors duration-200 border-b border-border-subtle" 
+        data-program-type="{{ $program->program_type }}" 
+        data-field="{{ $program->field }}" 
+        data-specialty="{{ $program->specialty }}" 
+        data-location-id="{{ $program->location_id }}" 
+        data-location-array="{{ is_array($program->location) ? implode(',', $program->location) : '' }}">
         <td class="px-4 py-3">{{ $program->book ?? '-' }}</td>
         <td class="px-4 py-3">{{ $program->field ?? '-' }}</td>
         <td class="px-4 py-3">{{ $program->specialty ?? '-' }}</td>
         <td class="px-4 py-3">{{ $program->level ?? '-' }}</td>
         <td class="px-4 py-3">{{ $program->status ?? '-' }}</td>
-        <td class="px-4 py-3">{{ $program->start_time ? \Carbon\Carbon::parse($program->start_time)->format('H:i') : '-' }}</td>
-        <td class="px-4 py-3">{{ $program->end_time ? \Carbon\Carbon::parse($program->end_time)->format('H:i') : '-' }}</td>
+        <td class="px-4 py-3">{{ $program->start_time ? \Carbon\Carbon::parse($program->start_time)->format('h:i') . (\Carbon\Carbon::parse($program->start_time)->format('A') == 'AM' ? ' ص' : ' م') : '-' }}</td>
+<td class="px-4 py-3">{{ $program->end_time ? \Carbon\Carbon::parse($program->end_time)->format('h:i') . (\Carbon\Carbon::parse($program->end_time)->format('A') == 'AM' ? ' ص' : ' م') : '-' }}</td>
         <td class="px-4 py-3">{{ $program->attendance_type ?? '-' }}</td>
         <td class="px-4 py-3">{{ $program->language ?? '-' }}</td>
         <td class="px-4 py-3">{{ $program->notes ?? '-' }}</td>
@@ -38,4 +43,4 @@
     <tr>
         <td colspan="13" class="px-4 py-8 text-center text-gray-500">لا توجد نتائج.</td>
     </tr>
-@endif 
+@endif

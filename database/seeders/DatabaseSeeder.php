@@ -21,5 +21,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(MasjidSeeder::class);
+        // Call PermissionSeeder
+        $this->call(PermissionSeeder::class);
+        // Call AdminSeeder
+        $this->call(AdminSeeder::class);
     }
 }

@@ -1,10 +1,13 @@
 @extends('layouts.admin')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['title' => 'الإعلانات']
+]" />
+<div style="height:2.5rem;"></div>
 <div class="announcements-page-container" style="max-width:1200px;margin:0 auto;">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="announcements-title" style="font-weight:900;color:#174032;font-size:1.5rem;letter-spacing:0.5px;font-family:'Cairo',sans-serif;">قائمة الإعلانات</h2>
-        <a href="{{ route('announcements.create') }}" class="btn announcements-add-btn">إضافة إعلان جديد</a>
     </div>
     <div class="announcements-table-card" style="background:#faf9f6;border-radius:16px;box-shadow:0 4px 24px rgba(30,41,59,0.07);padding:2.2rem 1.5rem;border-top:5px solid #d4af37;">
         <table class="announcements-table" style="width:100%;border-collapse:separate;border-spacing:0 0.5rem;font-size:1.07rem;font-family:'Cairo',sans-serif;">
@@ -16,7 +19,7 @@
                     <th style="padding:1rem 0.5rem;text-align:center;">المسجد</th>
                     <th style="padding:1rem 0.5rem;text-align:center;">تاريخ البدء</th>
                     <th style="padding:1rem 0.5rem;text-align:center;">تاريخ الانتهاء</th>
-                    <th style="padding:1rem 0.5rem;text-align:center;">إجراءات</th>
+                    <th style="padding:1rem 0.5rem;text-align:center;">الإجراءات</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,14 +43,12 @@
                     <td style="padding:0.9rem 0.5rem;text-align:center;">{{ $announcement->display_start_at }}</td>
                     <td style="padding:0.9rem 0.5rem;text-align:center;">{{ $announcement->display_end_at }}</td>
                     <td style="padding:0.9rem 0.5rem;text-align:center;">
-                        <div class="announcements-actions-btns" style="display:flex;flex-direction:column;gap:0.25rem;align-items:center;justify-content:center;">
-                            <a href="{{ route('announcements.edit', $announcement) }}" class="btn btn-outline-warning announcements-btn announcements-btn-action">تعديل</a>
-                            <form action="{{ route('announcements.destroy', $announcement) }}" method="POST" style="display:inline-block;" class="delete-entity-form" data-entity-name="{{ Str::limit($announcement->content, 30) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" class="btn btn-outline-danger announcements-btn announcements-btn-action delete-entity-btn">حذف</button>
-                            </form>
-                        </div>
+                        <a href="{{ route('announcements.edit', $announcement->id) }}" class="btn btn-sm btn-warning" title="تعديل"><i class="fas fa-edit"></i></a>
+                        <form action="{{ route('announcements.destroy', $announcement->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" title="حذف" onclick="return confirm('هل أنت متأكد من الحذف؟');"><i class="fas fa-trash-alt"></i></button>
+                        </form>
                     </td>
                 </tr>
                 @empty

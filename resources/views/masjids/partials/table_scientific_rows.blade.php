@@ -1,5 +1,9 @@
 @foreach($programs as $program)
-<tr>
+<tr data-program-type="{{ $program->program_type }}" 
+    data-field="{{ $program->field }}" 
+    data-specialty="{{ $program->specialty }}" 
+    data-location-id="{{ $program->location_id }}" 
+    data-location-array="{{ is_array($program->location) ? implode(',', $program->location) : '' }}">
     <td>{{ $program->book ?? '-' }}</td>
     <td>{{ $program->field ?? '-' }}</td>
     <td>{{ $program->specialty ?? '-' }}</td>
@@ -32,4 +36,4 @@
 @endforeach
 @if($programs->isEmpty())
 <tr><td colspan="13" class="text-center">لا توجد نتائج.</td></tr>
-@endif 
+@endif
